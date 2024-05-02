@@ -1,18 +1,29 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
-// import { User } from 'src/users/dto/user.dto';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+// import { AuthenticatedGuard } from './guards/authenticated.guard';
+import { ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from './guards/jwt-auth.guard';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly userService: UsersService,
     private authService: AuthService,
   ) {}
-  @Post('/signup')
+  @Post('register')
   async createUser(
     @Body('password') password: string,
     @Body('username') username: string,
@@ -28,10 +39,20 @@ export class AuthController {
     return result;
   }
 
-  @UseGuards(AuthGuard('local'))
-  @Post('/login')
-  async login(@Request() req: any) {
-    console.log(req.user);
-    return this.authService.login(req.user);
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  async login(@Request() req: any, @Response() res: any) {
+    try {
+      const accessToken = await this.authService.login(req.user);
+      this.authService.setAccessTokenCookie(res, accessToken);
+    } catch (error) {
+      return { error: 'Error' };
+    }
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('protected')
+  async getHello(@Request() req: any) {
+    return req.user;
   }
 }

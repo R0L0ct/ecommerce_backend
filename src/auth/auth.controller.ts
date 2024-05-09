@@ -23,6 +23,7 @@ export class AuthController {
     private readonly userService: UsersService,
     private authService: AuthService,
   ) {}
+
   @Post('register')
   async createUser(
     @Body('password') password: string,
@@ -44,7 +45,7 @@ export class AuthController {
   async login(@Request() req: any, @Response() res: any) {
     try {
       const accessToken = await this.authService.login(req.user);
-      this.authService.setAccessTokenCookie(res, accessToken);
+      this.authService.setAccessTokenCookie(res, accessToken, req);
     } catch (error) {
       return { error: 'Error' };
     }
@@ -54,5 +55,35 @@ export class AuthController {
   @Get('protected')
   async getHello(@Request() req: any) {
     return req.user;
+  }
+
+  // @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtGuard)
+  @Get('refresh-token')
+  async refreshToken(@Request() req: any, @Response() res: any) {
+    try {
+      this.authService.generateRefreshToken(res, req);
+    } catch (error) {
+      return { error };
+    }
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('logout')
+  async logoutSession(@Response() res: any) {
+    try {
+      this.authService.logout(res);
+    } catch (error) {
+      return { error };
+    }
+  }
+
+  @Post('validate-session')
+  async validateSessions(@Request() req: any, @Response() res: any) {
+    try {
+      this.authService.validateSession(req, res);
+    } catch (error) {
+      return { error };
+    }
   }
 }

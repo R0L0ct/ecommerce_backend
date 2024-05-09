@@ -24,23 +24,52 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-      // refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
-    };
+    return this.jwtService.sign(payload);
   }
 
-  async setAccessTokenCookie(res: any, token: any) {
+  async setAccessTokenCookie(res: any, token: any, req: any) {
     res.cookie('accessToken', token, {
-      // expires: new Date(new Date().getTime() + 30 * 1000),
-      sameSite: 'strict',
+      sameSite: 'lax',
       httpOnly: true,
       // secure: true,
     });
-    return res.send({ message: 'Successful authentication' });
+    return res.send({
+      message: 'Successful authentication',
+      username: req.user.username,
+    });
   }
 
-  generateRefreshToken(payload: any) {
-    return this.jwtService.sign(payload, { expiresIn: '30d' });
+  async generateRefreshToken(res: any, req: any) {
+    const token = req.cookies['accessToken'];
+    const jwtVerify = await this.jwtService.verify(token);
+    const payload = { username: jwtVerify.username, sub: jwtVerify.id };
+    const signToken = this.jwtService.sign(payload);
+    res.cookie('accessToken', signToken, {
+      // expires: new Date(new Date().getTime() + 30 * 1000),
+      sameSite: 'lax',
+      httpOnly: true,
+      // secure: true,
+    });
+    return res.send({ message: 'Token refreshed', token: signToken });
+  }
+  async logout(res: any) {
+    res.clearCookie('accessToken');
+    return res.status(200).send('Cookie removed successfully');
+  }
+
+  async validateSession(req: any, res: any) {
+    try {
+      const token = req.body.accessToken;
+      const jwtVerify = this.jwtService.verify(token);
+      if (token && jwtVerify) {
+        console.log('Valid Cookie');
+        return res.send({ username: jwtVerify.username });
+      } else {
+        console.log('Invalid Cookie');
+        return res.send({ message: 'Invalid cookie' });
+      }
+    } catch (err) {
+      return res.send({ message: 'Invalid JWT' });
+    }
   }
 }

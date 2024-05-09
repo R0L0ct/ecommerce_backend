@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as session from 'express-session';
 import * as passport from 'passport';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('E-commerce example')
     .setDescription('The E-commerce API description')
@@ -26,23 +27,26 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.use(cookieParser());
+  app.enableCors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+  });
   app.use(
     session({
-      name: 'NESTJS_SESSION_ID',
-      secret: 'sapeeee',
+      name: 'SESSION_ID',
+      secret: `${process.env.EXPRESS_SECRET}`,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 60000,
+        // maxAge: 60000,
         httpOnly: true,
-        secure: true,
+        // secure: true,
       },
     }),
   );
 
   app.use(passport.initialize());
   app.use(passport.session());
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();

@@ -13,13 +13,12 @@ import { SessionSerializer } from './serializer/session.serializer';
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
     PassportModule.register({
       session: true,
     }),
     JwtModule.register({
       secret: `${process.env.SECRET_KEY}`,
-      signOptions: { expiresIn: '15m' },
+      signOptions: { expiresIn: '30d' },
     }),
   ],
   controllers: [AuthController],

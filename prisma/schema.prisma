@@ -24,7 +24,7 @@ model Customer {
   country String
   state_province String
   city String
-  adress String
+  address String
   createdAt DateTime @default(now())
   user User? @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: SetNull)
   userId Int?  

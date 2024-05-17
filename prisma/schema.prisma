@@ -44,6 +44,7 @@ model Order {
 
 model OrderProduct {
   id      Int   @id @default(autoincrement()) 
+  amount Int
   order Order? @relation(fields: [orderId], references: [id], onUpdate: Cascade)
   orderId Int 
   productId Int 

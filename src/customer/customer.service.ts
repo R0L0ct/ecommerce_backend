@@ -21,6 +21,19 @@ export class CustomerService {
     });
   }
 
+  findOneByEmail(email: string) {
+    try {
+      return this.prisma.customer.findFirst({
+        where: {
+          email,
+        },
+      });
+    } catch (error) {
+      console.error('Error finding customer by email:', error);
+      throw error;
+    }
+  }
+
   update(id: number, data: Prisma.CustomerUpdateInput): Promise<Customer> {
     return this.prisma.customer.update({ where: { id: id }, data: data });
   }

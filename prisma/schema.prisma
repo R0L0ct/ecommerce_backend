@@ -35,7 +35,7 @@ model Customer {
 model Order {
   id      Int   @id @default(autoincrement())
   total Int
-  status String
+  status String @default("pending")
   customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   customerId Int? 
   createdAt DateTime @default(now())
@@ -47,5 +47,4 @@ model OrderProduct {
   order Order? @relation(fields: [orderId], references: [id], onUpdate: Cascade)
   orderId Int 
   productId Int 
-
 }

@@ -30,6 +30,12 @@ export class CustomerController {
   findCustomer(@Param('id') id: string) {
     return this.customerService.findOne(+id);
   }
+
+  @Post('/customer-email')
+  findCustomerByEmail(@Body() { email }: { email: string }) {
+    return this.customerService.findOneByEmail(email);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() data: Prisma.CustomerUpdateInput) {
     return this.customerService.update(+id, data);

@@ -73,8 +73,6 @@ export class AuthService {
     } catch (err) {
       return res.send({
         message: 'Invalid JWT',
-        verify: this.jwtService.verify(req.body.accessToken),
-        token: req.body.accessToken,
       });
     }
   }

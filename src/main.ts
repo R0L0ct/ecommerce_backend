@@ -29,7 +29,7 @@ async function bootstrap() {
   );
   app.enableCors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: 'https://ecommerce-frontend-dusky.vercel.app/',
   });
   app.use(
     session({

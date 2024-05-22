@@ -29,7 +29,7 @@ export class AuthService {
 
   async setAccessTokenCookie(res: any, token: any, req: any) {
     res.cookie('accessToken', token, {
-      sameSite: 'lax',
+      sameSite: 'None',
       httpOnly: true,
       secure: true,
     });
@@ -46,7 +46,7 @@ export class AuthService {
     const signToken = this.jwtService.sign(payload);
     res.cookie('accessToken', signToken, {
       // expires: new Date(new Date().getTime() + 30 * 1000),
-      sameSite: 'lax',
+      sameSite: 'None',
       httpOnly: true,
       secure: true,
     });

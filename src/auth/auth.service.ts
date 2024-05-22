@@ -64,10 +64,10 @@ export class AuthService {
       const token = req.body.accessToken;
       const jwtVerify = this.jwtService.verify(token);
       if (token && jwtVerify) {
-        // console.log('Valid Cookie', jwtVerify);
+        console.log('Valid Cookie', jwtVerify);
         return res.send({ username: jwtVerify.username, id: jwtVerify.sub });
       } else {
-        // console.log('Invalid Cookie');
+        console.log('Invalid Cookie');
         return res.send({ message: 'Invalid cookie' });
       }
     } catch (err) {

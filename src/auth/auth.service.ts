@@ -31,7 +31,7 @@ export class AuthService {
     res.cookie('accessToken', token, {
       sameSite: 'lax',
       httpOnly: true,
-      // secure: true,
+      secure: true,
     });
     return res.send({
       message: 'Successful authentication',
@@ -48,7 +48,7 @@ export class AuthService {
       // expires: new Date(new Date().getTime() + 30 * 1000),
       sameSite: 'lax',
       httpOnly: true,
-      // secure: true,
+      secure: true,
     });
     return res.send({ message: 'Token refreshed', token: signToken });
   }

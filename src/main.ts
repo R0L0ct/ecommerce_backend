@@ -40,7 +40,7 @@ async function bootstrap() {
       cookie: {
         // maxAge: 60000,
         httpOnly: true,
-        // secure: true,
+        secure: true,
       },
     }),
   );

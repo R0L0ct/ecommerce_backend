@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             if (req && req.cookies) {
               token = req.cookies['accessToken'];
             }
-            console.log(token);
+            // console.log(token);
             return token;
           } catch (error: any) {
             console.log('There is no token');

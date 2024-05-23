@@ -41,12 +41,11 @@ export class AuthService {
   }
 
   async generateRefreshToken(res: any, req: any) {
-    const token = req.cookies['accessToken'];
+    const token = await req.cookies['accessToken'];
     const jwtVerify = await this.jwtService.verify(token);
     const payload = { username: jwtVerify.username, sub: jwtVerify.sub };
     const signToken = this.jwtService.sign(payload);
     res.cookie('accessToken', signToken, {
-      // expires: new Date(new Date().getTime() + 30 * 1000),
       sameSite: 'none',
       httpOnly: true,
       secure: true,
@@ -61,13 +60,13 @@ export class AuthService {
 
   async validateSession(req: any, res: any) {
     try {
-      const token = req.body.accessToken;
-      const jwtVerify = this.jwtService.verify(token);
+      const token = await req.body.accessToken;
+      const jwtVerify = await this.jwtService.verify(token);
       if (token && jwtVerify) {
-        console.log('Valid Cookie', jwtVerify);
+        // console.log('Valid Cookie', jwtVerify);
         return res.send({ username: jwtVerify.username, id: jwtVerify.sub });
       } else {
-        console.log('Invalid Cookie');
+        // console.log('Invalid Cookie');
         return res.send({ message: 'Invalid cookie' });
       }
     } catch (err) {

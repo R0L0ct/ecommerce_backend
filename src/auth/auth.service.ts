@@ -32,7 +32,6 @@ export class AuthService {
       sameSite: 'none',
       httpOnly: true,
       secure: true,
-      partitioned: true,
     });
     return res.send({
       message: 'Successful authentication',
@@ -49,7 +48,6 @@ export class AuthService {
       sameSite: 'none',
       httpOnly: true,
       secure: true,
-      partitioned: true,
     });
     return res.send({ message: 'Token refreshed', token: signToken });
   }

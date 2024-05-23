@@ -46,9 +46,11 @@ async function bootstrap() {
       },
     }),
   );
-
+  const port = process.env.PORT || 4000;
   app.use(passport.initialize());
   app.use(passport.session());
-  await app.listen(3001);
+  await app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+  });
 }
 bootstrap();

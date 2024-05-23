@@ -37,6 +37,7 @@ export class AuthService {
     return res.send({
       message: 'Successful authentication',
       username: req.user.username,
+      token,
     });
   }
 
@@ -51,7 +52,11 @@ export class AuthService {
       secure: true,
       partitioned: true,
     });
-    return res.send({ message: 'Token refreshed', token: signToken });
+    return res.send({
+      message: 'Token refreshed',
+      token: signToken,
+      id: jwtVerify.sub,
+    });
   }
   async logout(res: any) {
     res.clearCookie('accessToken');

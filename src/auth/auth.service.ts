@@ -29,9 +29,10 @@ export class AuthService {
 
   async setAccessTokenCookie(res: any, token: any, req: any) {
     res.cookie('accessToken', token, {
-      // sameSite: 'none',
+      sameSite: 'none',
       httpOnly: true,
       secure: true,
+      partitioned: true,
     });
     return res.send({
       message: 'Successful authentication',
@@ -45,9 +46,10 @@ export class AuthService {
     const payload = { username: jwtVerify.username, sub: jwtVerify.sub };
     const signToken = this.jwtService.sign(payload);
     res.cookie('accessToken', signToken, {
-      // sameSite: 'none',
+      sameSite: 'none',
       httpOnly: true,
       secure: true,
+      partitioned: true,
     });
     return res.send({ message: 'Token refreshed', token: signToken });
   }
